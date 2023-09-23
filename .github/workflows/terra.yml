@@ -1,0 +1,37 @@
+name: terraform
+
+on: [push]
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS }}
+
+jobs:
+  terraform-template:
+    runs-on: ubuntu-latest # Use the latest version of the Ubuntu runner
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3 # Use a specific version of the checkout action (v2 in this case)
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: latest
+
+      - name: Set up SSH and Initialize Terraform
+        run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< "${{ secrets.SSH_KEY_GITHUB_ACTIONS }}"
+          terraform init
+
+      - name: Format Terraform Files
+        run: terraform fmt
+
+      - name: Validate Terraform Configuration
+        run: terraform validate
+
+      - name: Plan Terraform Changes
+        run: terraform plan
+      - name: Apply
+        run: terraform apply --auto-approve
