@@ -16,12 +16,12 @@ on:
         required: true
       
 jobs:
-  Infra-deploy:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ inputs.work-dir }}
-    steps:
+   Infra-deploy:
+     runs-on: ubuntu-latest
+     defaults:
+       run:
+         working-directory: ${{ inputs.work-dir }}
+     steps:
       - name: AWS Creds
         uses: aws-actions/configure-aws-credentials@v1
         with:
