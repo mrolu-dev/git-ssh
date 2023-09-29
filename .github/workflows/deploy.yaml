@@ -1,6 +1,6 @@
 name: Deploy Infrastructure
 
-on: 
+on:
   workflow_call:
     inputs:
       work-dir:
@@ -29,26 +29,27 @@ jobs:
           aws-region: ${{ inputs.aws-region }}
 
       - name: Checkout
-        uses: actions/checkout@v3 # Use a specific version of the checkout action (v2 in this case)
-    
+        uses: actions/checkout@v3
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: latest
-    
+
       - name: Set up SSH and Initialize Terraform
         run: |
           eval `ssh-agent -s`
           ssh-add - <<< "${{ secrets.SSH_KEY_GITHUB_ACTIONS }}"
           terraform init  
-          
+
       - name: Format Terraform Files
         run: terraform fmt
-          
+
       - name: Validate Terraform Configuration
         run: terraform validate
-          
+
       - name: Plan Terraform Changes
         run: terraform plan
+
       - name: Apply
         run: terraform apply --auto-approve
