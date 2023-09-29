@@ -15,7 +15,7 @@ on:
       SSH_KEY_GITHUB_ACTIONS:
         required: true
       
-jobs:
+ jobs:
    Infra-deploy:
      runs-on: ubuntu-latest
      defaults:
