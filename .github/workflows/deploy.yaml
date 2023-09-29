@@ -15,13 +15,13 @@ on:
       SSH_KEY_GITHUB_ACTIONS:
         required: true
       
- jobs:
-   Infra-deploy:
-     runs-on: ubuntu-latest
-     defaults:
-       run:
-         working-directory: ${{ inputs.work-dir }}
-     steps:
+jobs:
+  Infra-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.work-dir }}
+    steps:
       - name: AWS Creds
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -40,15 +40,15 @@ on:
         run: |
           eval `ssh-agent -s`
           ssh-add - <<< "${{ secrets.SSH_KEY_GITHUB_ACTIONS }}"
-          terraform init
-    
+          terraform init  
+          
       - name: Format Terraform Files
         run: terraform fmt
-    
+          
       - name: Validate Terraform Configuration
         run: terraform validate
-    
+          
       - name: Plan Terraform Changes
         run: terraform plan
       - name: Apply
-        run: terraform apply --auto-approve          
+        run: terraform apply --auto-approve
