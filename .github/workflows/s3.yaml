@@ -1,11 +1,10 @@
-name: s3 Deploy
+name: S3 Deploy
 
-on: 
+on:
   workflow_dispatch:
-
-
+    
 permissions:
-  id-token: write  ## must be added
+  id-token: write
   pull-requests: write
   statuses: write
   actions: read
@@ -13,18 +12,10 @@ permissions:
   
 jobs:
   call-vpc-workflow:
-    uses: ./.github/workflows/deploy.yaml
+    uses: ./.github/workflows/deploy.yml
     with:
       work-dir: "environments/s3"
       aws-region: "us-west-2"
     secrets:
-      CI_ROLE: ${{secrets.CI_ROLE}}
-      SSH_KEY_GITHUB_ACTIONS: "${{ secrets.SSH_KEY_GITHUB_ACTIONS }}"  ## For private repos
-    
-    
-    
-    
-    
-    
-  
-     
+      CI_ROLE: ${{ secrets.CI_ROLE }}
+      SSH_KEY_GITHUB_ACTIONS: ${{ secrets.SSH_KEY_GITHUB_ACTIONS }}  # For private repos
