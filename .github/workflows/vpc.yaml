@@ -13,7 +13,7 @@ permissions:
   
 jobs:
   call-vpc-workflow:
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/deploy.yaml
     with:
       work-dir: "environments/vpc"
       aws-region: "us-west-2"
