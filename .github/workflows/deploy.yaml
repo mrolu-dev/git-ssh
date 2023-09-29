@@ -1,0 +1,54 @@
+name: Deploy Infrastructure
+
+on: 
+  workflow_call:
+    inputs:
+      work-dir:
+        required: true
+        type: string
+      aws-region:
+        required: true
+        type: string
+    secrets:
+      CI_ROLE:
+        required: true
+      SSH_KEY_GITHUB_ACTIONS:
+        required: true
+      
+  jobs:
+    Infra-deploy:
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ${{ inputs.work-dir }}
+      steps:
+        - name: AWS Creds
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            role-to-assume: ${{ secrets.CI_ROLE }}
+            aws-region: ${{ inputs.aws-region }}
+
+        - name: Checkout
+          uses: actions/checkout@v3 # Use a specific version of the checkout action (v2 in this case)
+    
+        - name: Setup Terraform
+          uses: hashicorp/setup-terraform@v2
+          with:
+            terraform_version: latest
+    
+        - name: Set up SSH and Initialize Terraform
+          run: |
+            eval `ssh-agent -s`
+            ssh-add - <<< "${{ secrets.SSH_KEY_GITHUB_ACTIONS }}"
+            terraform init
+    
+        - name: Format Terraform Files
+          run: terraform fmt
+    
+        - name: Validate Terraform Configuration
+          run: terraform validate
+    
+        - name: Plan Terraform Changes
+          run: terraform plan
+        - name: Apply
+          run: terraform apply --auto-approve          
